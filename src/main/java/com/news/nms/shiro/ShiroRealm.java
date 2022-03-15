@@ -1,5 +1,6 @@
-package com.news.nms.config;
+package com.news.nms.shiro;
 
+import com.news.nms.config.PermissionConfig;
 import com.news.nms.entity.Admin;
 import com.news.nms.service.AdminService;
 import org.apache.shiro.SecurityUtils;
@@ -13,7 +14,7 @@ import org.apache.shiro.subject.Subject;
 import javax.annotation.Resource;
 
 
-public class RealmConfig extends AuthorizingRealm {
+public class ShiroRealm extends AuthorizingRealm {
     @Resource
     AdminService adminService;
 

@@ -1,4 +1,4 @@
-package com.news.nms.config;
+package com.news.nms.shiro;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,30 +19,34 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager")DefaultWebSecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String,String> map = new HashMap<>();
-        map.put("/token", "anon");
-        map.put("/*", "authc");
+        Map<String,String> filterChain = new HashMap<>();
+        filterChain.put("/token", "anon");
+        filterChain.put("/*", "authc");
+//        shiroFilterFactoryBean.setLoginUrl("/404");
+//        shiroFilterFactoryBean.setUnauthorizedUrl("/404");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChain);
 
-//        shiroFilterFactoryBean.setLoginUrl("/login");
-//        shiroFilterFactoryBean.setUnauthorizedUrl("/error/401");
-
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+        Map<String, Filter> filters = new HashMap<>();
+//        filters.put("roles", new RolesFilter());
+        filters.put("authc", new LoginFilter());
+//        filters.put("perms", new PermissionsFilter());
+        shiroFilterFactoryBean.setFilters(filters);
         return shiroFilterFactoryBean;
     }
 
     @Bean(name="realm")
-    public RealmConfig getRealm(){
-        return new RealmConfig();
+    public ShiroRealm getRealm(){
+        return new ShiroRealm();
     }
 
     @Bean(name="securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("realm")RealmConfig realmConfig){
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("realm") ShiroRealm shiroRealm){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         DefaultWebSessionManager manager = new DefaultWebSessionManager();
         manager.setSessionIdCookie(new SimpleCookie("NMS_JSESSIONID"));
         securityManager.setSessionManager(manager);
-        realmConfig.setCredentialsMatcher(hashedCredentialsMatcher());
-        securityManager.setRealm(realmConfig);
+        shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        securityManager.setRealm(shiroRealm);
         return securityManager;
     }
 
