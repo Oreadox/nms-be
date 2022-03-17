@@ -20,8 +20,9 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String,String> filterChain = new HashMap<>();
-        filterChain.put("/token", "anon");
-        filterChain.put("/*", "authc");
+//        filterChain.put("/token", "anon");
+//        filterChain.put("/*", "authc");
+        filterChain.put("/logout", "logout");
 //        shiroFilterFactoryBean.setLoginUrl("/404");
 //        shiroFilterFactoryBean.setUnauthorizedUrl("/404");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChain);

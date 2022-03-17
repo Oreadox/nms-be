@@ -15,7 +15,7 @@ public class LoginFilter extends FormAuthenticationFilter {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", ((HttpServletRequest) request).getHeader("Origin"));
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.setContentType("application/json");
+//        httpServletResponse.setContentType("application/json");
         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
 //        httpServletResponse.getWriter().write("UNAUTHORIZED");
         System.out.println(401);

@@ -3,6 +3,8 @@ package com.news.nms.controller;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.Map;
 @RequestMapping("/token")
 public class TokenController {
     @GetMapping
+    @RequiresAuthentication
     public ResponseEntity<?> getLoginStatus(){
         Subject subject = SecurityUtils.getSubject();
         Map<String, Object> resp = new HashMap<>();
@@ -32,6 +35,7 @@ public class TokenController {
     }
 
     @PostMapping
+    @RequiresGuest
     public ResponseEntity<?> createToken(@RequestBody Map<String, Object> params){
         Map<String, Object> resp = new HashMap<>();
         System.out.println(params);

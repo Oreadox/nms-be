@@ -6,20 +6,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PermissionConfig {
-    public static final String NEWS_READ = "news:read";
-    public static final String NEWS_EDIT = "news:edit";
-    public static final String NEWS_NEW = "news:new";
+    public static final String NEWS_NEW_AND_EDIT = "news:newEdit";
     public static final String NEWS_CHECK = "news:check";
-    public static final String USER_VIEW = "user:view";
-    public static final String USER_ADD = "user:add";
-    public static final String USER_EDIT = "user:edit";
-    public static final String SUPERUSER = "superuser";
+    public static final String USER_ALL = "user:*";
+    public static final String SUPERUSER = "*:*";
 
     public static Set<String> getDefaultPermission(String permission){
         Set<String> set =  new HashSet<>();
-        addPermission(set, NEWS_READ);
-        addPermission(set, NEWS_EDIT);
-        addPermission(set, NEWS_NEW);
+        addPermission(set, NEWS_NEW_AND_EDIT);
         return set;
     }
 
