@@ -15,7 +15,7 @@ import java.util.Map;
 @RequestMapping("/token")
 public class TokenController {
     @GetMapping
-    public ResponseEntity<?> get(){
+    public ResponseEntity<?> getLoginStatus(){
         Subject subject = SecurityUtils.getSubject();
         Map<String, Object> resp = new HashMap<>();
         if(subject.isAuthenticated()){
@@ -25,11 +25,14 @@ public class TokenController {
             resp.put("status", 0);
             resp.put("message", "未登录");
         }
+        // todo: 发布版本删去
+        resp.put("getPrincipal", subject.getPrincipal());
+        resp.put("getSession", subject.getSession());
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> getToken(@RequestBody Map<String, Object> params){
+    public ResponseEntity<?> createToken(@RequestBody Map<String, Object> params){
         Map<String, Object> resp = new HashMap<>();
         System.out.println(params);
         String username, password;
