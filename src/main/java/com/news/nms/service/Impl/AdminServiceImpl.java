@@ -1,5 +1,6 @@
 package com.news.nms.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.news.nms.entity.Admin;
 import com.news.nms.mapper.AdminMapper;
@@ -37,5 +38,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         if(adminList.size()!=0)
             return adminList.get(0);
         return null;
+    }
+
+    @Override
+    public Admin getByKeyword(String keyword) {
+        return adminMapper.selectOne(new QueryWrapper<Admin>().
+                eq("username", keyword).or().eq("name", keyword));
     }
 }

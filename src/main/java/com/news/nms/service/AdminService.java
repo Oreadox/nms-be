@@ -6,4 +6,5 @@ import com.news.nms.entity.Admin;
 public interface AdminService extends IService<Admin> {
     Admin getByUsername(String username);
     Admin getByUsernameAndPasswordHash(String username, String passwordHash);
+    Admin getByKeyword(String keyword);
 }
