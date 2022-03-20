@@ -3,6 +3,7 @@ package com.news.nms.config;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PermissionConfig {
@@ -11,31 +12,51 @@ public class PermissionConfig {
     public static final String USER_ALL = "user:*";
     public static final String SUPERUSER = "*:*";
 
-    public static Set<String> getDefaultPermission(String permission){
-        Set<String> set =  new HashSet<>();
-        addPermission(set, NEWS_NEW_AND_EDIT);
-        return set;
+    private static final List<String> ALL =
+            Arrays.asList(NEWS_NEW_AND_EDIT, NEWS_CHECK, USER_ALL, SUPERUSER);
+
+    public static Set<String> getDefaultPermission(String permission) {
+        Set<String> set = new HashSet<>();
+        return addPermission(set, NEWS_NEW_AND_EDIT);
     }
 
-    public static Set<String> toSet(String permission){
+    public static Set<String> toSet(String permission) {
         return new HashSet<>(Arrays.asList(permission.split(",")));
     }
 
-    public static String toString(Set<String> set){
+    public static String toString(Set<String> set) {
         return String.join(",", set);
     }
 
-    public static Set<String> addPermission(Set<String> set, String permission) {
-        set.add(permission);
-        return set;
+    public static Set<String> addPermission(Set<String> perm, String permission) {
+        perm.add(permission);
+        return perm;
     }
 
-    public static Set<String> removePermission(Set<String> set, String permission) {
-        set.remove(permission);
-        return set;
+    public static Set<String> addPermission(String perm, String permission) {
+        return addPermission(toSet(perm), permission);
     }
 
+    public static Set<String> removePermission(Set<String> perm, String permission) {
+        perm.remove(permission);
+        return perm;
+    }
 
+    public static Set<String> removePermission(String perm, String permission) {
+        return removePermission(toSet(perm), permission);
+    }
+
+    public static Boolean verifyPermission(Set<String> permission) {
+        for (String perm : permission) {
+            if (!ALL.contains(perm))
+                return false;
+        }
+        return true;
+    }
+
+    public static Boolean verifyPermission(String permission) {
+        return verifyPermission(toSet(permission));
+    }
 
 }
 
