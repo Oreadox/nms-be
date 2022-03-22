@@ -69,9 +69,8 @@ public class TokenController {
                 resp.put("message", "该账号启用了两步验证，口令不能为空");
                 return new ResponseEntity<>(resp, HttpStatus.OK);
             }
-            GoogleAuthenticator gAuth = new GoogleAuthenticator();
-            int code = gAuth.getTotpPassword(admin.getTotp());
-            if (totp != code) {
+            Integer code = new GoogleAuthenticator().getTotpPassword(admin.getTotp());;
+            if (!totp.equals(code)) {
                 resp.put("status", 0);
                 resp.put("message", "口令错误");
                 return new ResponseEntity<>(resp, HttpStatus.OK);

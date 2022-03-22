@@ -3,6 +3,7 @@ package com.news.nms.controller;
 import com.news.nms.config.PermissionConfig;
 import com.news.nms.entity.Admin;
 import com.news.nms.service.AdminService;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -113,10 +114,19 @@ public class AdminController {
         }
         if (admin != null) {
             Admin adminNew = new Admin();
+            Boolean enabledTotp = admin.getEnableTotp();
             adminNew.setId(admin.getId());
             adminNew.setName((String) params.get("name"));
-            adminNew.setTotp((String) params.get("totp"));
-            adminNew.setEnableTotp((Boolean) params.get("enable_totp"));
+            //adminNew.setTotp((String) params.get("totp"));
+            Boolean enableTotp = (Boolean) params.get("enable_totp");
+            adminNew.setEnableTotp(enableTotp);
+            if(!enabledTotp&&enableTotp){
+                Map<String, Object> data = new HashMap<>();
+                String totp = new GoogleAuthenticator().createCredentials().getKey();
+                data.put("totp", totp);
+                resp.put("data", data);
+                adminNew.setTotp(totp);
+            }
             String password = (String) params.get("password");
             if (password != null)
                 adminNew.setPasswordHash(new Md5Hash(password, "", 8).toHex());
