@@ -27,7 +27,9 @@ public class ShiroRealm extends AuthorizingRealm {
         Subject subject = SecurityUtils.getSubject();
         Admin admin = (Admin) subject.getPrincipal();
         Admin dbAdmin = adminService.getById(admin.getId());
-        info.addStringPermissions(PermissionConfig.toSet(dbAdmin.getPermission()));
+        String permission = dbAdmin.getPermission();
+        if(permission!=null)
+            info.addStringPermissions(PermissionConfig.toSet(permission));
         return info;
     }
 
