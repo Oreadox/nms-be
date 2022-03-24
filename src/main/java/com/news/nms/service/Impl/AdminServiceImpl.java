@@ -41,8 +41,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     }
 
     @Override
-    public Admin getByKeyword(String keyword) {
-        return adminMapper.selectOne(new QueryWrapper<Admin>().
+    public List<Admin> getByKeyword(String keyword) {
+        return adminMapper.selectList(new QueryWrapper<Admin>().
                 eq("username", keyword).or().eq("name", keyword));
     }
 }

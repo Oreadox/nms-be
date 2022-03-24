@@ -63,14 +63,14 @@ public class TokenController {
             return new ResponseEntity<>(resp, HttpStatus.OK);
         }
         if (admin.getEnableTotp()) {
-            Integer totp = (Integer) params.get("totp");
-            if (totp == null) {
+            String totpString = (String) params.get("totp");
+            if (totpString == null) {
                 resp.put("status", 0);
                 resp.put("message", "该账号启用了两步验证，口令不能为空");
                 return new ResponseEntity<>(resp, HttpStatus.OK);
             }
             Integer code = new GoogleAuthenticator().getTotpPassword(admin.getTotp());;
-            if (!totp.equals(code)) {
+            if (!Integer.getInteger(totpString).equals(code)) {
                 resp.put("status", 0);
                 resp.put("message", "口令错误");
                 return new ResponseEntity<>(resp, HttpStatus.OK);
