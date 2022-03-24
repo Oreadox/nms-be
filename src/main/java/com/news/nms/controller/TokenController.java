@@ -72,7 +72,7 @@ public class TokenController {
             Integer code = new GoogleAuthenticator().getTotpPassword(admin.getTotp());;
             if (!Integer.getInteger(totpString).equals(code)) {
                 resp.put("status", 0);
-                resp.put("message", "口令错误");
+                resp.put("message", "动态口令错误");
                 return new ResponseEntity<>(resp, HttpStatus.OK);
             }
         }
@@ -89,6 +89,17 @@ public class TokenController {
         resp.put("message", "登录成功");
         Map<String, Object> data = new HashMap<>();
         resp.put("data", data);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    @RequiresAuthentication
+    public ResponseEntity<?> logout(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("status", 1);
+        resp.put("message", "登出成功");
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 }

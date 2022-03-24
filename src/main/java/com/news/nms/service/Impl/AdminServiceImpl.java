@@ -43,6 +43,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public List<Admin> getByKeyword(String keyword) {
         return adminMapper.selectList(new QueryWrapper<Admin>().
-                eq("username", keyword).or().eq("name", keyword));
+                like("username", keyword).or().like("name", keyword));
     }
 }
