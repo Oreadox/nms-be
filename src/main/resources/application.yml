@@ -5,3 +5,10 @@ spring:
         username: user
         password: user
 
+server:
+    port: 8081
+
+logging:
+    level:
+        com.news.nms: debug
+
