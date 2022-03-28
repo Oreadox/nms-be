@@ -23,4 +23,9 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         return newsMapper.selectList(new QueryWrapper<News>().
                 like("title", keyword).or().like("content", keyword));
     }
+
+    @Override
+    public List<News> getUnchecked() {
+        return newsMapper.selectList(new QueryWrapper<News>().eq("checked", false));
+    }
 }

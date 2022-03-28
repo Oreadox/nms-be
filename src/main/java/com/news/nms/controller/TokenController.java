@@ -1,6 +1,10 @@
 package com.news.nms.controller;
 
 import com.news.nms.entity.Admin;
+import com.news.nms.model.request.TokenPostRequest;
+import com.news.nms.model.response.AdminMapResponse;
+import com.news.nms.model.response.BaseResponse;
+import com.news.nms.model.response.data.AdminData;
 import com.news.nms.service.AdminService;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import org.apache.shiro.SecurityUtils;
@@ -11,10 +15,10 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/token")
@@ -27,53 +31,45 @@ public class TokenController {
     @RequiresAuthentication
     public ResponseEntity<?> getLoginStatus() {
         Subject subject = SecurityUtils.getSubject();
-        Map<String, Object> resp = new HashMap<>();
+        Admin admin = (Admin) subject.getPrincipal();
         if (subject.isAuthenticated()) {
-            resp.put("status", 1);
-            resp.put("message", "已登录");
+            AdminData data = AdminData.builder()
+                    .id(admin.getId()).username(admin.getUsername()).name(admin.getName())
+                    .enableTotp(admin.getEnableTotp()).createTime(admin.getCreateTime()).build();
+            return new ResponseEntity<>(
+                    AdminMapResponse.builder().status(1).message("已登录").data(data).build()
+                    , HttpStatus.OK);
         } else {
-            resp.put("status", 0);
-            resp.put("message", "未登录");
+            return new ResponseEntity<>(
+                    BaseResponse.builder().status(0).message("未登录").build()
+                    , HttpStatus.OK);
         }
-        // todo: 发布版本删去
-        resp.put("getPrincipal", subject.getPrincipal());
-        resp.put("getSession", subject.getSession());
-        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
     @PostMapping
 //    @RequiresGuest
-    public ResponseEntity<?> createToken(@RequestBody Map<String, Object> params) {
-        Map<String, Object> resp = new HashMap<>();
-        System.out.println(params);
-        String username, password;
-        try {
-            username = params.get("username").toString();
-            password = params.get("password").toString();
-
-        } catch (NullPointerException e) {
-            resp.put("status", 0);
-            resp.put("message", "用户名或密码不能为空");
-            return new ResponseEntity<>(resp, HttpStatus.OK);
-        }
+    public ResponseEntity<?> createToken(@RequestBody @Validated TokenPostRequest request) {
+        String username=request.getUsername(), password=request.getPassword();
+        System.out.println(request);
         Admin admin = adminService.getByUsername(username);
         if (admin == null) {
-            resp.put("status", 0);
-            resp.put("message", "该用户不存在");
-            return new ResponseEntity<>(resp, HttpStatus.OK);
+            return new ResponseEntity<>(
+                    BaseResponse.builder().status(0).message("该用户不存在").build()
+                    , HttpStatus.OK);
         }
         if (admin.getEnableTotp()) {
-            String totpString = (String) params.get("totp");
-            if (totpString == null) {
-                resp.put("status", 0);
-                resp.put("message", "该账号启用了两步验证，口令不能为空");
-                return new ResponseEntity<>(resp, HttpStatus.OK);
+            String totpString = request.getTotp();
+            if (Objects.equals(totpString, "")) {
+                return new ResponseEntity<>(
+                        BaseResponse.builder().status(0).message("该账号启用了两步验证，口令不能为空").build()
+                        , HttpStatus.OK);
             }
-            Integer code = new GoogleAuthenticator().getTotpPassword(admin.getTotp());;
-            if (!Integer.getInteger(totpString).equals(code)) {
-                resp.put("status", 0);
-                resp.put("message", "动态口令错误");
-                return new ResponseEntity<>(resp, HttpStatus.OK);
+            Integer code = (new GoogleAuthenticator()).getTotpPassword(admin.getTotp());
+//            System.out.println("code="+code);
+            if (!Integer.valueOf(totpString).equals(code)) {
+                return new ResponseEntity<>(
+                        BaseResponse.builder().status(0).message("动态口令错误").build()
+                        , HttpStatus.OK);
             }
         }
         Subject subject = SecurityUtils.getSubject();
@@ -81,15 +77,13 @@ public class TokenController {
         try {
             subject.login(token);
         } catch (AuthenticationException e) {
-            resp.put("status", 0);
-            resp.put("message", "密码错误");
-            return new ResponseEntity<>(resp, HttpStatus.OK);
+            return new ResponseEntity<>(
+                    BaseResponse.builder().status(0).message("密码错误").build()
+                    , HttpStatus.OK);
         }
-        resp.put("status", 1);
-        resp.put("message", "登录成功");
-        Map<String, Object> data = new HashMap<>();
-        resp.put("data", data);
-        return new ResponseEntity<>(resp, HttpStatus.OK);
+        return new ResponseEntity<>(
+                BaseResponse.builder().status(1).message("登录成功").build()
+                , HttpStatus.OK);
     }
 
     @DeleteMapping
@@ -97,9 +91,8 @@ public class TokenController {
     public ResponseEntity<?> logout(){
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("status", 1);
-        resp.put("message", "登出成功");
-        return new ResponseEntity<>(resp, HttpStatus.OK);
+        return new ResponseEntity<>(
+                BaseResponse.builder().status(1).message("登出成功").build()
+                , HttpStatus.OK);
     }
 }

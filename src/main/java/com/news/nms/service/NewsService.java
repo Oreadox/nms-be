@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface NewsService extends IService<News> {
     List<News> getByKeyword(String keyword);
+    List<News> getUnchecked();
 }

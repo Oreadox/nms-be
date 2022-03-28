@@ -4,6 +4,11 @@ spring:
         url: jdbc:mysql://localhost:3306/db?serverTimezone=GMT%2B8
         username: user
         password: user
+    jackson:
+        property-naming-strategy: SNAKE_CASE
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+        default-property-inclusion: non_null
 
 server:
     port: 8081
@@ -11,4 +16,5 @@ server:
 logging:
     level:
         com.news.nms: debug
+
 
