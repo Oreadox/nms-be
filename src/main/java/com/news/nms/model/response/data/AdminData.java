@@ -1,6 +1,5 @@
 package com.news.nms.model.response.data;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.news.nms.entity.Admin;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,6 @@ public class AdminData {
     private Boolean enableTotp;
     @JsonProperty(value = "create_time")
     private Date createTime;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
 
     public void setAdmin(Admin admin){
         this.id=admin.getId();
