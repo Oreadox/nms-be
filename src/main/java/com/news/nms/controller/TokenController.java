@@ -2,7 +2,7 @@ package com.news.nms.controller;
 
 import com.news.nms.entity.Admin;
 import com.news.nms.model.request.TokenPostRequest;
-import com.news.nms.model.response.AdminMapResponse;
+import com.news.nms.model.response.AdminResponse;
 import com.news.nms.model.response.BaseResponse;
 import com.news.nms.model.response.data.AdminData;
 import com.news.nms.service.AdminService;
@@ -26,18 +26,16 @@ public class TokenController {
     @Autowired
     AdminService adminService;
 
-
     @GetMapping
     @RequiresAuthentication
     public ResponseEntity<?> getLoginStatus() {
         Subject subject = SecurityUtils.getSubject();
         Admin admin = (Admin) subject.getPrincipal();
         if (subject.isAuthenticated()) {
-            AdminData data = AdminData.builder()
-                    .id(admin.getId()).username(admin.getUsername()).name(admin.getName())
-                    .enableTotp(admin.getEnableTotp()).createTime(admin.getCreateTime()).build();
+            AdminData data = new AdminData();
+            data.setAdmin(admin);
             return new ResponseEntity<>(
-                    AdminMapResponse.builder().status(1).message("已登录").data(data).build()
+                    AdminResponse.builder().status(1).message("已登录").data(data).build()
                     , HttpStatus.OK);
         } else {
             return new ResponseEntity<>(

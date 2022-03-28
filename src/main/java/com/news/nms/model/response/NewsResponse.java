@@ -1,5 +1,6 @@
 package com.news.nms.model.response;
 
+import com.news.nms.model.response.data.NewsData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseResponse {
+public class NewsResponse {
     private Integer status;
     private String message;
+    private NewsData data;
 }

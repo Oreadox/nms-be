@@ -22,7 +22,7 @@ public class News {
     private String content;             // 未格式化的新闻内容
     private Boolean useMarkdown;
     private Boolean checked;
-    private Integer AuthorId;
+    private Integer authorId;
     private Date releaseTime;
 }
 
