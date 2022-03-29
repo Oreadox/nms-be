@@ -34,6 +34,7 @@ create table news
     checked      bool     default false not null,
     author_id    int                    not null,
     release_time datetime default now() not null,
+    count        int      default 0     not null,
     constraint news_pk
         primary key (id),
     constraint news_admin_id_fk

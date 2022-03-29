@@ -24,5 +24,6 @@ public class News {
     private Boolean checked;
     private Integer authorId;
     private Date releaseTime;
+    private Integer count;
 }
 

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Objects;
 
 @ControllerAdvice
-public class BindExceptionHandler {
+public class MethodArgumentNotValidExceptionHandler {
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> exceptionHandler(MethodArgumentNotValidException e){
+    public ResponseEntity<?> ExceptionHandler(MethodArgumentNotValidException e){
 //        e.printStackTrace();
         return new ResponseEntity<>(
                 BaseResponse.builder().status(0).

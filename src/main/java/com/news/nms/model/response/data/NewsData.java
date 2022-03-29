@@ -19,13 +19,15 @@ public class NewsData {
     private String content;
     @JsonProperty(value = "author_username")
     private String authorUsername;
+    private Integer count;
     @JsonProperty(value = "release_time")
     private Date releaseTime;
 
     public void setNews(News news){
         this.id = news.getId();
         this.title = news.getTitle();
-        this.content = news.getTitle();
+        this.content = news.getContent();
+        this.count = news.getCount();
         this.releaseTime = news.getReleaseTime();
     }
 }

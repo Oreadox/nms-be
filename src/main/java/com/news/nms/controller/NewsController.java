@@ -49,12 +49,59 @@ public class NewsController {
                 NewsData data = NewsData.builder()
                         .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
                 data.setNews(news);
+                news.setCount(news.getCount() + 1);
+                try {
+                    newsService.updateById(news);
+                } catch (Exception ignored){ }
                 return new ResponseEntity<>(
                         NewsResponse.builder().status(1).message("成功").data(data).build()
                         , HttpStatus.OK);
             }
         }
+    }
 
+    @GetMapping(value = "/page/{page}")
+    public ResponseEntity<?> getNewsByPage(@PathVariable Integer page) {
+        List<NewsData> dataList = new ArrayList<>();
+        List<News> newsList = newsService.getByPage(page, 15);
+        for (News news : newsList) {
+            if (!news.getChecked())
+                continue;
+            NewsData data = NewsData.builder()
+                    .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
+            data.setNews(news);
+            dataList.add(data);
+        }
+        return new ResponseEntity<>(
+                NewsListResponse.builder().status(1).message("成功").data(dataList).build()
+                , HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/page")
+    public ResponseEntity<?> getNewsByPage() {
+        return getNewsByPage(1);
+    }
+
+    @GetMapping(value = "/popular/{num}")
+    public ResponseEntity<?> getNewsByPopular(@PathVariable Integer num) {
+        List<NewsData> dataList = new ArrayList<>();
+        List<News> newsList = newsService.getByCount(num);
+        for (News news : newsList) {
+            if (!news.getChecked())
+                continue;
+            NewsData data = NewsData.builder()
+                    .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
+            data.setNews(news);
+            dataList.add(data);
+        }
+        return new ResponseEntity<>(
+                NewsListResponse.builder().status(1).message("成功").data(dataList).build()
+                , HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/popular")
+    public ResponseEntity<?> getNewsByPopular() {
+        return getNewsByPopular(10);
     }
 
     @GetMapping(value = "/search/{keyword}")
