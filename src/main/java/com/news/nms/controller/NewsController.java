@@ -13,6 +13,7 @@ import com.news.nms.service.AdminService;
 import com.news.nms.service.NewsService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class NewsController {
                     BaseResponse.builder().status(0).message("该新闻不存在").build()
                     , HttpStatus.OK);
         } else {
-            if (!news.getChecked() && !subject.isPermitted(PermissionConfig.NEWS_CHECK)) {
+            if (news.getChecked()<=0 && !subject.isPermitted(PermissionConfig.NEWS_CHECK)) {
                 return new ResponseEntity<>(
                         BaseResponse.builder().status(0).message("该新闻尚未通过审核").build()
                         , HttpStatus.OK);
@@ -65,7 +66,7 @@ public class NewsController {
         List<NewsData> dataList = new ArrayList<>();
         List<News> newsList = newsService.getByPage(page, 15);
         for (News news : newsList) {
-            if (!news.getChecked())
+            if (news.getChecked()<=0)
                 continue;
             NewsData data = NewsData.builder()
                     .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
@@ -87,7 +88,7 @@ public class NewsController {
         List<NewsData> dataList = new ArrayList<>();
         List<News> newsList = newsService.getByCount(num);
         for (News news : newsList) {
-            if (!news.getChecked())
+            if (news.getChecked()<=0)
                 continue;
             NewsData data = NewsData.builder()
                     .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
@@ -109,8 +110,42 @@ public class NewsController {
         List<NewsData> dataList = new ArrayList<>();
         List<News> newsList = newsService.getByKeyword(keyword);
         for (News news : newsList) {
-            if (!news.getChecked())
+            if (news.getChecked()<=0)
                 continue;
+            NewsData data = NewsData.builder()
+                    .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
+            data.setNews(news);
+            dataList.add(data);
+        }
+        return new ResponseEntity<>(
+                NewsListResponse.builder().status(1).message("成功").data(dataList).build()
+                , HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/my")
+    @RequiresAuthentication
+    public ResponseEntity<?> getMyNews() {
+        Subject subject = SecurityUtils.getSubject();
+        Admin admin = adminService.getById(((Admin) subject.getPrincipal()).getId());
+        List<NewsData> dataList = new ArrayList<>();
+        List<News> newsList = newsService.getByAuthorId(admin.getId());
+        for (News news : newsList) {
+            NewsData data = NewsData.builder()
+                    .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
+            data.setNews(news);
+            dataList.add(data);
+        }
+        return new ResponseEntity<>(
+                NewsListResponse.builder().status(1).message("成功").data(dataList).build()
+                , HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all")
+    @RequiresAuthentication
+    public ResponseEntity<?> getAllNews() {
+        List<NewsData> dataList = new ArrayList<>();
+        List<News> newsList = newsService.getAll();
+        for (News news : newsList) {
             NewsData data = NewsData.builder()
                     .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
             data.setNews(news);

@@ -10,4 +10,6 @@ public interface NewsService extends IService<News> {
     List<News> getUnchecked();
     List<News> getByPage(Integer page, Integer numEachPage);
     List<News> getByCount(Integer num);
+    List<News> getByAuthorId(Integer id);
+    List<News> getAll();
 }

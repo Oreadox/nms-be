@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,5 +40,15 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
     @Override
     public List<News> getByCount(Integer num) {
         return newsMapper.selectList(new QueryWrapper<News>().orderByDesc("count").last("limit "+num));
+    }
+
+    @Override
+    public List<News> getByAuthorId(Integer id) {
+        return newsMapper.selectList(new QueryWrapper<News>().eq("author_id", id));
+    }
+
+    @Override
+    public List<News> getAll() {
+        return newsMapper.selectList(null);
     }
 }

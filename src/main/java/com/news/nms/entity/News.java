@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -21,9 +21,9 @@ public class News {
     private String title;
     private String content;             // 未格式化的新闻内容
     private Boolean useMarkdown;
-    private Boolean checked;
+    private Integer checked;
     private Integer authorId;
-    private Date releaseTime;
+    private Timestamp releaseTime;
     private Integer count;
 }
 

@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -20,9 +20,11 @@ public class Admin {
     private Integer id;
     private String username;
     private String name;
+    private String email;
+    private String department;
     private String totp;
     private Boolean enableTotp;
     private String passwordHash;
     private String permission;
-    private Date createTime;
+    private Timestamp createTime;
 }

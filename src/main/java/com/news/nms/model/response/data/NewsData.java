@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -21,7 +21,8 @@ public class NewsData {
     private String authorUsername;
     private Integer count;
     @JsonProperty(value = "release_time")
-    private Date releaseTime;
+    private Timestamp releaseTime;
+    private Integer checked;
 
     public void setNews(News news){
         this.id = news.getId();
@@ -29,5 +30,6 @@ public class NewsData {
         this.content = news.getContent();
         this.count = news.getCount();
         this.releaseTime = news.getReleaseTime();
+        this.checked=news.getChecked();
     }
 }

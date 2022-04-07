@@ -17,5 +17,5 @@ public class NewsPutRequest {
     private String content;
     @JsonProperty(value = "use_markdown")
     private Boolean useMarkdown;
-    private Boolean checked;
+    private Integer checked;
 }
