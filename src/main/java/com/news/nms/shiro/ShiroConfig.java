@@ -30,6 +30,7 @@ public class ShiroConfig {
         Map<String, Filter> filters = new HashMap<>();
 //        filters.put("roles", new RolesFilter());
         filters.put("authc", new LoginFilter());
+        filters.put("logout", new ShiroLogoutFilter());
 //        filters.put("perms", new PermissionsFilter());
         shiroFilterFactoryBean.setFilters(filters);
         return shiroFilterFactoryBean;

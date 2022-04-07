@@ -133,6 +133,7 @@ public class NewsController {
             NewsData data = NewsData.builder()
                     .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
             data.setNews(news);
+            data.setContent("");
             dataList.add(data);
         }
         return new ResponseEntity<>(
@@ -149,6 +150,7 @@ public class NewsController {
             NewsData data = NewsData.builder()
                     .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
             data.setNews(news);
+            data.setContent("");
             dataList.add(data);
         }
         return new ResponseEntity<>(
@@ -209,7 +211,8 @@ public class NewsController {
             News news1 = new News().setId(request.getId());
             if (canCheck) {
                 news1.setChecked(request.getChecked());
-            } else if (canEdit) {
+            }
+            if (canEdit) {
                 news1.setTitle(request.getTitle()).setContent((request.getContent()));
             }
             try {
