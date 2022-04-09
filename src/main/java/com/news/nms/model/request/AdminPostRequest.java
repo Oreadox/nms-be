@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +16,8 @@ public class AdminPostRequest {
     private String name;
     @NotBlank(message = "密码")
     private String password;
-    private String permission;
+    private String email;
+    private String phone;
+    private String department;
+    private Set<String> permission;
 }

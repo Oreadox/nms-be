@@ -24,9 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -70,6 +68,21 @@ public class AdminController {
         }
     }
 
+    @GetMapping(value = "/all")
+    @RequiresPermissions(PermissionConfig.USER_ALL)
+    public ResponseEntity<?> getAllAdmin() {
+        List<AdminData> dataList = new ArrayList<>();
+        List<Admin> adminList = adminService.getAll();
+        for (Admin admin : adminList) {
+            AdminData data = new AdminData();
+            data.setAdmin(admin);
+            dataList.add(data);
+        }
+        return new ResponseEntity<>(
+                AdminListResponse.builder().status(1).message("成功").data(dataList).build()
+                , HttpStatus.OK);
+    }
+
     @GetMapping(value = "/search/{keyword}")
     @RequiresPermissions(PermissionConfig.USER_ALL)
     public ResponseEntity<?> getAdminStatusByKeyword(@PathVariable String keyword) {
@@ -95,7 +108,11 @@ public class AdminController {
         }
         Admin admin = Admin.builder().username(request.getUsername()).name(request.getName())
                 .passwordHash(new Md5Hash(request.getPassword(), "", 8).toHex())
-                .permission(request.getPermission()).build();
+                .build();
+
+        if(request.getPermission()!=null && PermissionConfig.verifyPermission(request.getPermission())){
+            admin.setPermission(PermissionConfig.toString(request.getPermission()));
+        }
         try {
             adminService.save(admin);
         } catch (Exception e) {
@@ -125,23 +142,25 @@ public class AdminController {
         }
         if (admin != null) {
             Admin adminNew = Admin.builder().id(admin.getId()).name(request.getName())
+                    .email(request.getEmail()).phone(request.getPhone()).department(request.getDepartment())
                     .enableTotp(request.getEnableTotp()).build();
             Boolean enabledTotp = admin.getEnableTotp();
-
             String password = request.getPassword();
             if (password != null && !password.equals(""))
                 adminNew.setPasswordHash(new Md5Hash(password, "", 8).toHex());
-            String permission = request.getPermission();
+            String permission = PermissionConfig.toString(request.getPermission());
             if (permission != null && subject.isPermitted(PermissionConfig.USER_ALL)
                     && PermissionConfig.verifyPermission(permission)) {
                 adminNew.setPermission(permission);
             }
             TotpData data = null;
-            if (!enabledTotp && request.getEnableTotp()) {
-                String totp = new GoogleAuthenticator().createCredentials().getKey();
-                adminNew.setTotp(totp);
-                data = TotpData.builder().totp(totp).build();
-            }
+            if(request.getEnableTotp()!=null)
+                if (!enabledTotp && request.getEnableTotp()) {
+                    String totp = new GoogleAuthenticator().createCredentials().getKey();
+                    adminNew.setTotp(totp);
+                    data = TotpData.builder().totp(totp).build();
+                }
+//            System.out.println(adminNew);
             try {
                 adminService.updateById(adminNew);
             } catch (Exception e) {
@@ -162,7 +181,6 @@ public class AdminController {
     @DeleteMapping(value = "/{id}")
     @RequiresPermissions(PermissionConfig.USER_ALL)
     public ResponseEntity<?> deleteAdmin(@PathVariable Integer id) {
-        Map<String, Object> resp = new HashMap<>();
         Admin admin = adminService.getById(id);
         if (admin != null) {
             try {

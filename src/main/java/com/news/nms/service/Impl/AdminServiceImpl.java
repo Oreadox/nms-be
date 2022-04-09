@@ -45,4 +45,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return adminMapper.selectList(new QueryWrapper<Admin>().
                 like("username", keyword).or().like("name", keyword));
     }
+
+    @Override
+    public List<Admin> getAll() {
+        return adminMapper.selectList(null);
+    }
 }

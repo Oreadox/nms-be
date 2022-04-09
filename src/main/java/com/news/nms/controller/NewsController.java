@@ -42,7 +42,8 @@ public class NewsController {
                     BaseResponse.builder().status(0).message("该新闻不存在").build()
                     , HttpStatus.OK);
         } else {
-            if (news.getChecked()<=0 && !subject.isPermitted(PermissionConfig.NEWS_CHECK)) {
+            if (news.getChecked()<=0 && !(subject.isPermitted(PermissionConfig.NEWS_CHECK)||
+                    subject.isPermitted(PermissionConfig.NEWS_NEW_AND_EDIT))) {
                 return new ResponseEntity<>(
                         BaseResponse.builder().status(0).message("该新闻尚未通过审核").build()
                         , HttpStatus.OK);

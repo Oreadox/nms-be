@@ -4,13 +4,14 @@ create table admin
         primary key,
     username      varchar(40)                          not null,
     name          varchar(20)                          null,
-    totp          varchar(20)                          null,
+    email         varchar(40)                          null,
+    phone         varchar(20)                          null,
+    department    varchar(20)                          null,
+    totp          varchar(50)                          null,
     enable_totp   tinyint(1) default 0                 not null,
     password_hash varchar(80)                          not null,
     permission    text                                 null,
     create_time   timestamp  default CURRENT_TIMESTAMP not null,
-    email         varchar(40)                          null,
-    department    varchar(20)                          null,
     constraint admin_username_uindex
         unique (username)
 );

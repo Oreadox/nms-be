@@ -21,6 +21,7 @@ public class Admin {
     private String username;
     private String name;
     private String email;
+    private String phone;
     private String department;
     private String totp;
     private Boolean enableTotp;

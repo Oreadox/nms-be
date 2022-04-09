@@ -1,10 +1,7 @@
 package com.news.nms.config;
 
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class PermissionConfig {
     public static final String NEWS_NEW_AND_EDIT = "news:newEdit";
@@ -21,10 +18,15 @@ public class PermissionConfig {
     }
 
     public static Set<String> toSet(String permission) {
+        if (Objects.equals(permission, "") || permission == null)
+            return new HashSet<>();
         return new HashSet<>(Arrays.asList(permission.split(",")));
     }
 
     public static String toString(Set<String> set) {
+        if (set == null) {
+            return null;
+        }
         return String.join(",", set);
     }
 
