@@ -66,7 +66,8 @@ public class TokenController {
 //            System.out.println("code="+code);
             if (!Integer.valueOf(totpString).equals(code)) {
                 return new ResponseEntity<>(
-                        BaseResponse.builder().status(0).message("动态口令错误").build()
+                        BaseResponse.builder().status(0)
+                                .message("动态口令错误，若您遗失了动态口令密钥，可以联系管理员重置密码").build()
                         , HttpStatus.OK);
             }
         }
