@@ -21,7 +21,7 @@ public class TagController {
     TagService tagService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllNews() {
+    public ResponseEntity<?> getAllTag() {
         List<Tag> tagList = tagService.getAll();
         List<TagData> dataList = new ArrayList<>();
         for (Tag tag : tagList) {
