@@ -28,7 +28,7 @@ public class AdminMapperTest {
     public void testInsert(){
         System.out.println(("----- testing AdminMapper Insert ------"));
         Admin admin = new Admin();
-        admin.setUsername("test");
+        admin.setUsername("junit");
 
         admin.setPasswordHash(new Md5Hash("test", "", 8).toHex());
         adminMapper.insert(admin);
@@ -46,7 +46,7 @@ public class AdminMapperTest {
     public void testDelete(){
         System.out.println(("----- testing AdminMapper Delete ------"));
         Map<String, Object> map = new HashMap<>();
-        map.put("username", "test");
+        map.put("username", "junit");
         adminMapper.deleteByMap(map);
     }
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,5 @@ public class NewsPostRequest {
     @JsonProperty(value = "use_markdown")
     @NotNull(message = "是否使用md标记不能为null")
     private Boolean useMarkdown;
+    private List<String> tags;
 }

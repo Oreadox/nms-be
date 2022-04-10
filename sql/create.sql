@@ -38,6 +38,7 @@ create table tag
 (
     id       int auto_increment,
     tag_name varchar(20)   not null,
+    `desc`   varchar(20)   not null,
     trend    int default 1 not null,
     primary key (id, tag_name)
 );

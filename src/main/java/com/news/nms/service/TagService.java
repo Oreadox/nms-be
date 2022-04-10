@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TagService extends IService<Tag> {
     List<Tag> getAll();
+    Tag getByTagName(String name);
 }

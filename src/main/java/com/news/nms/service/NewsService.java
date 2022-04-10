@@ -12,4 +12,6 @@ public interface NewsService extends IService<News> {
     List<News> getByCount(Integer num);
     List<News> getByAuthorId(Integer id);
     List<News> getAll();
+    List<News> getByTagName(String tag);
+    List<News> getByTagNameAndPage(String tag, Integer page, Integer numEachPage);
 }

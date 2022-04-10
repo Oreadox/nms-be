@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,5 @@ public class NewsPutRequest {
     @JsonProperty(value = "use_markdown")
     private Boolean useMarkdown;
     private Integer checked;
+    private List<String> tags;
 }

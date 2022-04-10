@@ -13,13 +13,15 @@ import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.joda.time.DateTimeConstants.MILLIS_PER_MINUTE;
+
 @Configuration
 public class ShiroConfig {
-    @Bean(name ="shiroFilterFactoryBean")
-    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager")DefaultWebSecurityManager securityManager){
+    @Bean(name = "shiroFilterFactoryBean")
+    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new CustomShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String,String> filterChain = new HashMap<>();
+        Map<String, String> filterChain = new HashMap<>();
 //        filterChain.put("/token", "anon");
 //        filterChain.put("/*", "authc");
         filterChain.put("/logout", "logout");
@@ -36,16 +38,17 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
-    @Bean(name="realm")
-    public ShiroRealm getRealm(){
+    @Bean(name = "realm")
+    public ShiroRealm getRealm() {
         return new ShiroRealm();
     }
 
-    @Bean(name="securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("realm") ShiroRealm shiroRealm){
+    @Bean(name = "securityManager")
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("realm") ShiroRealm shiroRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         DefaultWebSessionManager manager = new DefaultWebSessionManager();
         manager.setSessionIdCookie(new SimpleCookie("NMS_JSESSIONID"));
+        manager.setGlobalSessionTimeout(7 * 24 * 60 * MILLIS_PER_MINUTE);
         securityManager.setSessionManager(manager);
         shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         securityManager.setRealm(shiroRealm);

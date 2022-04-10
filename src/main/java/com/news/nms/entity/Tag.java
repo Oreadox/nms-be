@@ -17,5 +17,6 @@ public class Tag {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String tagName;
+    private String desc;
     private Integer trend;
 }
