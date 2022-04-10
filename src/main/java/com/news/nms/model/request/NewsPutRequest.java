@@ -19,5 +19,5 @@ public class NewsPutRequest {
     @JsonProperty(value = "use_markdown")
     private Boolean useMarkdown;
     private Integer checked;
-    private List<String> tags;
+    private List<Integer> tags;
 }

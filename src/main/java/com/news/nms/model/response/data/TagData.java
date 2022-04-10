@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TagData {
     private Integer id;
-    private String name;
+    private String tagName;
+    private String description;
     public void setTag(Tag tag){
         this.id = tag.getId();
-        this.name = tag.getTagName();
+        this.tagName = tag.getTagName();
+        this.description = tag.getDescription();
     }
 }

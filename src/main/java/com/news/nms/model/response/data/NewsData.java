@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Builder
@@ -23,6 +24,7 @@ public class NewsData {
     @JsonProperty(value = "release_time")
     private Timestamp releaseTime;
     private Integer checked;
+    private List<Integer> tags;
 
     public void setNews(News news){
         this.id = news.getId();

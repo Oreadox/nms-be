@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class NewsTagsServiceImpl extends ServiceImpl<NewsTagsMapper, NewsTags> implements NewsTagsService {
@@ -24,5 +26,10 @@ public class NewsTagsServiceImpl extends ServiceImpl<NewsTagsMapper, NewsTags> i
     @Override
     public void removeByNewsId(Integer id) {
         newsTagsMapper.delete(new QueryWrapper<NewsTags>().eq("news_id", id));
+    }
+
+    @Override
+    public List<NewsTags> getByNewsId(Integer id) {
+        return newsTagsMapper.selectList(new QueryWrapper<NewsTags>().eq("news_id", id));
     }
 }

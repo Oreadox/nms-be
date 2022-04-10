@@ -20,5 +20,5 @@ public class NewsPostRequest {
     @JsonProperty(value = "use_markdown")
     @NotNull(message = "是否使用md标记不能为null")
     private Boolean useMarkdown;
-    private List<String> tags;
+    private List<Integer> tags;
 }

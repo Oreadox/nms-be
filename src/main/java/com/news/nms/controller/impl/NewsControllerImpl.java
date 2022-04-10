@@ -61,6 +61,12 @@ public class NewsControllerImpl implements NewsController {
                 NewsData data = NewsData.builder()
                         .authorUsername(adminService.getById(news.getAuthorId()).getUsername()).build();
                 data.setNews(news);
+                List<Integer> tags = new ArrayList<>();
+                List<NewsTags> newsTagsList = newsTagsService.getByNewsId(id);
+                for (NewsTags newsTags : newsTagsList) {
+                    tags.add(newsTags.getTagId());
+                }
+                data.setTags(tags);
                 news.setCount(news.getCount() + 1);
                 try {
                     newsService.updateById(news);
@@ -241,10 +247,10 @@ public class NewsControllerImpl implements NewsController {
                 .useMarkdown(request.getUseMarkdown()).authorId(admin.getId()).build();
         try {
             newsService.save(news);
-            List<String> tagStringList = request.getTags();
-            if (tagStringList != null) {
-                for (String tagString : tagStringList) {
-                    Tag tag = tagService.getByTagName(tagString);
+            List<Integer> tagIdList = request.getTags();
+            if (tagIdList != null) {
+                for (Integer tagId : tagIdList) {
+                    Tag tag = tagService.getById(tagId);
                     NewsTags newsTags = NewsTags.builder()
                             .newsId(news.getId()).tagId(tag.getId()).tagName(tag.getTagName()).build();
                     newsTagsService.save(newsTags);
@@ -285,11 +291,11 @@ public class NewsControllerImpl implements NewsController {
             try {
                 newsService.updateById(news1);
                 if (canEdit) {
-                    List<String> tagStringList = request.getTags();
-                    if (tagStringList != null) {
+                    List<Integer> tagIdList = request.getTags();
+                    if (tagIdList != null) {
                         newsTagsService.removeByNewsId(news.getId());
-                        for (String tagString : tagStringList) {
-                            Tag tag = tagService.getByTagName(tagString);
+                        for (Integer tagId : tagIdList) {
+                            Tag tag = tagService.getById(tagId);
                             NewsTags newsTags = NewsTags.builder()
                                     .newsId(news.getId()).tagId(tag.getId()).tagName(tag.getTagName()).build();
                             newsTagsService.save(newsTags);
