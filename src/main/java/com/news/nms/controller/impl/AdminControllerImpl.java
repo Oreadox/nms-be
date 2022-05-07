@@ -192,6 +192,7 @@ public class AdminControllerImpl implements AdminController {
         Admin admin = adminService.getById(id);
         if (admin != null) {
             try {
+                // 该用户创建的新闻也会被数据库关联删除
                 adminService.removeById(admin);
             } catch (Exception e) {
                 return new ResponseEntity<>(
