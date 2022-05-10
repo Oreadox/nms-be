@@ -107,6 +107,7 @@ public class AdminControllerImpl implements AdminController {
     @PostMapping
     @RequiresPermissions(PermissionConfig.USER_ALL)
     public ResponseEntity<?> addAdmin(@RequestBody @Validated AdminPostRequest request) {
+        Subject subject = SecurityUtils.getSubject();
         if (adminService.getByUsername(request.getUsername()) != null) {
             return new ResponseEntity<>(
                     BaseResponse.builder().status(0).message("用户名重复").build()
@@ -115,8 +116,8 @@ public class AdminControllerImpl implements AdminController {
         Admin admin = Admin.builder().username(request.getUsername()).name(request.getName())
                 .passwordHash(new Md5Hash(request.getPassword(), "", 8).toHex())
                 .build();
-
-        if (request.getPermission() != null && PermissionConfig.verifyPermission(request.getPermission())) {
+        if (subject.isPermitted(PermissionConfig.SUPERUSER) && request.getPermission() != null &&
+                PermissionConfig.verifyPermission(request.getPermission())) {
             admin.setPermission(PermissionConfig.toString(request.getPermission()));
         }
         try {
@@ -156,7 +157,7 @@ public class AdminControllerImpl implements AdminController {
             if (password != null && !password.equals(""))
                 adminNew.setPasswordHash(new Md5Hash(password, "", 8).toHex());
             String permission = PermissionConfig.toString(request.getPermission());
-            if (permission != null && subject.isPermitted(PermissionConfig.USER_ALL)
+            if (permission != null && subject.isPermitted(PermissionConfig.SUPERUSER)
                     && PermissionConfig.verifyPermission(permission)) {
                 adminNew.setPermission(permission);
             }
