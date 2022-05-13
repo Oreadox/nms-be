@@ -4,14 +4,14 @@ create table admin
         primary key,
     username      varchar(40)                          not null,
     name          varchar(20)                          null,
-    totp          varchar(50)                          null,
+    phone         varchar(20)                          null,
+    email         varchar(40)                          null,
+    department    varchar(20)                          null,
     enable_totp   tinyint(1) default 0                 not null,
+    totp          varchar(50)                          null,
     password_hash varchar(80)                          not null,
     permission    text                                 null,
     create_time   timestamp  default CURRENT_TIMESTAMP not null,
-    email         varchar(40)                          null,
-    department    varchar(20)                          null,
-    phone         varchar(20)                          null,
     constraint admin_username_uindex
         unique (username)
 );
@@ -20,7 +20,7 @@ create table news
 (
     id           int auto_increment
         primary key,
-    title        varchar(40)                          not null,
+    title        varchar(255)                         not null,
     content      text                                 not null,
     use_markdown tinyint(1) default 0                 not null,
     checked      tinyint(1) default 0                 not null,

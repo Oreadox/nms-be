@@ -33,15 +33,18 @@ public class FileControllerImpl implements FileController {
     private String bucketName = CosConfig.BUCKET_NAME;
     private COSClient cosClient = new COSClient(cred, new ClientConfig(region));
 
+    // 获取预签名上传URL接口
     @Override
     @GetMapping("/presigned_url/{filename}")
     @RequiresPermissions(PermissionConfig.NEWS_NEW_AND_EDIT)
     public ResponseEntity<?> getPresignedUrl(@PathVariable String filename) {
         Date expirationTime = new Date(System.currentTimeMillis() + 3 * 60 * 1000);
         try {
-            URL url = cosClient.generatePresignedUrl(bucketName, filename, expirationTime, HttpMethodName.PUT);
+            URL url = cosClient.generatePresignedUrl(bucketName,
+                    filename, expirationTime, HttpMethodName.PUT);
             return new ResponseEntity<>(
-                    UrlResponse.builder().status(1).message("成功").data(new UrlData(url.toString())).build()
+                    UrlResponse.builder().status(1).message("成功")
+                            .data(new UrlData(url.toString())).build()
                     , HttpStatus.OK);
         } catch (CosClientException e) {
             return new ResponseEntity<>(
@@ -50,13 +53,15 @@ public class FileControllerImpl implements FileController {
         }
     }
 
+    // 获取文件下载URL接口
     @Override
     @GetMapping("/url/{filename}")
     @RequiresPermissions(PermissionConfig.NEWS_NEW_AND_EDIT)
     public ResponseEntity<?> getFileUrl(@PathVariable String filename) {
         URL url = cosClient.getObjectUrl(bucketName, filename);
         return new ResponseEntity<>(
-                UrlResponse.builder().status(1).message("成功").data(new UrlData(url.toString())).build()
+                UrlResponse.builder().status(1).message("成功")
+                        .data(new UrlData(url.toString())).build()
                 , HttpStatus.OK);
     }
 }
